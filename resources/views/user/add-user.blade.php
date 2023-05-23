@@ -11,13 +11,14 @@
     </div>
 </div>
 <div id="section2">
-<form  id="postAddUser1" method="POST" action="{{  route('post.add.user') }}" class="row m-2 p-2 d-flex flex-column flex-md-row">
+
+<form  id="postAddUser1" method="POST" action="{{ route('post.add.user') }}"  class="row m-2 p-2 d-flex flex-column flex-md-row">
                 @csrf
-                <input type="hidden" name="grandpa_id" value="1" >
-            <div class="col">
+                <input type="hidden" id="grandpaId" name="grandpa_id" value="" >
+            <!-- <div class="col">   
                 <label>ID</label>
                 <input type="text" name="id" class="form-control border border-dark" placeholder="Enter ID" disabled>
-            </div>
+            </div> -->
             <div class="col">
                 <label>Name</label>
                 <input type="text" name="children_name" class="form-control border border-dark" placeholder="Enter Name">
@@ -32,6 +33,7 @@
             </div>
             <div class="col">
                 <button type="submit" class=" form-control border border-dark mt-4 btn btn-primary">save</button>
+                <button type="button" id="sp" onclick="addChildren(this, this.id);" class="d-none form-control border border-dark mt-4 btn btn-dark">Add Children</button>
             </div>
         </form>
 
@@ -41,21 +43,45 @@
 
 
 <script>
-$(document).ready(function() {
+    let counter = 10
+// $(document).ready(function() {
 
     $('#selectgrandpa').on('change', function() {
-    var selectedOption = $(this).val();
-    // Perform some action based on the selected option
-    console.log('Selected option: ' + selectedOption);
+        var selectedOption = $(this).val();
+        // Perform some action based on the selected option
+        console.log('Selected option: ' + selectedOption);   
+        
+        $('#grandpaId').val(selectedOption);
+    });
+    
 
-    var section2 = ""
-    section2 = `<form  id="postAddUser" class="row m-2 p-2 d-flex flex-column flex-md-row">
+    
+// });
+
+// document.querySelector('.ac').addEventListener('click',()=>{
+//       var newNode = document.createElement("div");
+//       var referenceNode = document.querySelector('.ac');
+//       referenceNode.appendChild(newNode);
+// });
+
+    function addChildren(button, id){
+        console.log('btn id: '+ id)
+       console.log('addchild');
+    //    var listItem = document.createElement("li");
+        // Get the closest form element to the clicked button
+        const form = button.closest('form');
+
+        // Get the form ID
+        const formId = form.id;  
+        console.log(formId)  
+        
+        const child_id = "postAddUser" + counter++;
+        console.log('form child id: '+  child_id)
+
+        $('#'+formId).append(`<form  id="${child_id}" method="POST" action="{{ route('post.add.user') }}" class="row m-2 p-2 d-flex flex-column flex-md-row">
                 @csrf
-                <input type="hidden" name="grandpa_id" value="1" >
-            <div class="col">
-                <label>ID</label>
-                <input type="text" name="id" class="form-control border border-dark" placeholder="Enter ID" disabled>
-            </div>
+                <input type="hidden" name="grandpa_id" value="${id}" >
+           
             <div class="col">
                 <label>Name</label>
                 <input type="text" name="children_name" class="form-control border border-dark" placeholder="Enter Name">
@@ -70,29 +96,63 @@ $(document).ready(function() {
             </div>
             <div class="col">
                 <button type="submit" class=" form-control border border-dark mt-4 btn btn-primary">save</button>
+                <button type="button" id="sp" onclick="addChildren(this, this.id);" class="d-none form-control border border-dark mt-4 btn btn-dark">Add Children</button>
             </div>
-        </form>`
-    $('#section2').html(section2);      
-});
-    
+        </form>`);
 
-    $('#postAddUser').on('submit', function(event){
+        $('#'+child_id).on('submit', function(event){
+         console.log(child_id);
+            event.preventDefault(); // Prevent the form from submitting via the browser
+             //const firstParent = $(this).parentNode;
+             //console.log(firstParent);
+            $.ajax({
+                url: $(this).attr('action'), // Use the Laravel route URL
+                type: $(this).attr('method'), // Use the POST method
+                data: $(this).serialize(), // Pass the form data
+                success: function(response) {
+                    console.log(response); // Handle the server response
+                    // $(this + "#sp" ).removeClass("d-none");
+                    $('#'+child_id+' #sp').removeClass("d-none");
+                    $('#'+child_id+' #sp').attr("id", response.id);
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log('Error: ' + textStatus + ' ' + errorThrown); // Handle the AJAX error
+                }
+            });
+        });
+        
+        // $.ajax({
+        //     url:  $('#'+formId).attr('action'), // Use the Laravel route URL
+        //     type: $('#'+formId).attr('method'), // Use the POST method
+        //     data: $('#'+formId).serialize(), // Pass the form data
+        //     success: function(response) {
+        //         console.log(response); // Handle the server response
+        //     },
+        //     error: function(jqXHR, textStatus, errorThrown) {
+        //         console.log('Error: ' + textStatus + ' ' + errorThrown); // Handle the AJAX error
+        //     }
+        // });
+    }
+
+    $('#postAddUser1').on('submit', function(event){
         event.preventDefault(); // Prevent the form from submitting via the browser
-        var formData = $(this).serialize();
-        console.log(formdata)
+
         $.ajax({
             url: $(this).attr('action'), // Use the Laravel route URL
             type: $(this).attr('method'), // Use the POST method
             data: $(this).serialize(), // Pass the form data
             success: function(response) {
                 console.log(response); // Handle the server response
+                
+                $("#postAddUser1 #sp").removeClass("d-none");
+                $("#postAddUser1 #sp").attr("id", response.id);
+
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 console.log('Error: ' + textStatus + ' ' + errorThrown); // Handle the AJAX error
             }
         });
     });
-});
 </script>
 
 @endsection

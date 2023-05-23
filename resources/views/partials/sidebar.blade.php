@@ -46,7 +46,7 @@
                 User
             </a>
             <ul class="collapse list-unstyled ms-5" id="target">
-                <li><a class="link-dark d-inline-flex text-decoration-none rounded text-white" href="/userdetails">
+                <li><a class="link-dark d-inline-flex text-decoration-none rounded text-white" href="{{ route('user.details')}}">
                         <i class="fa-regular fa-square-plus pt-2 pe-2"></i>  user details
                     </a>
                 </li>

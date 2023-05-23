@@ -37,7 +37,8 @@
         
     </table> 
     
-            {{ $grandpa->links('pagination.pagination-style') }}
+            {{ $grandpa->links('vendor.pagination.bootstrap-5') }}
+            <!-- {{ $grandpa->links() }} -->
         </div>
     
     

@@ -31,8 +31,8 @@ Route::get('/',  [DashboardController::class, 'index']);
 Route::get('/grandpa_child/{grandpa_id}',  [DashboardController::class, 'grandpaChild']);
 Route::post('search', [DashboardController::class, 'search'])->name('search'); 
 
-Route::get('/userdetails',  [AddUserController::class, 'grandpa']); 
-Route::post('/add-user',  [AddUserController::class, 'store'])->name('post.add.user');
+Route::get('/userdetails',  [AddUserController::class, 'grandpa'])->name('user.details'); 
+Route::post('/add-user/',  [AddUserController::class, 'store'])->name('post.add.user');
 
 
 

@@ -14,9 +14,9 @@ class AddUserController extends Controller
     }
 
     public function store(Request $request){
-        return $request;
+        // return $request;
         $validator = Validator::make($request->all(), [
-            // 'id' => 'required',
+            'grandpa_id' => 'required',
             'children_name' => 'required',
             'age' => 'required',
             'veteran' => 'required'
